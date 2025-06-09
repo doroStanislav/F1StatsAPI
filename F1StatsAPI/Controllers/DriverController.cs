@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using F1StatsAPI.Data;
 using F1StatsAPI.Models;
 
@@ -21,6 +22,19 @@ namespace F1StatsAPI.Controllers
             return _context.Drivers.ToList();
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Driver>> GetDriver(int id)
+        {
+            var driver = await _context.Drivers.FindAsync(id);
+
+            if (driver == null)
+            {
+                return NotFound();
+            }
+
+            return driver;
+        }
+
         [HttpPost]
         public ActionResult<Driver> AddDriver(Driver driver)
         {
@@ -31,7 +45,7 @@ namespace F1StatsAPI.Controllers
                 d.Code == driver.Code && 
                 d.GivenName == driver.GivenName);
 
-            return CreatedAtAction(nameof(GetDrivers), new {id = driver.Id}, driver);
+            return CreatedAtAction(nameof(GetDriver), new {id = driver.Id}, driver);
         }
 
         [HttpPut("{id}")]

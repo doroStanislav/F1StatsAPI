@@ -8,5 +8,6 @@ namespace F1StatsAPI.Data
         public F1StatsContext(DbContextOptions<F1StatsContext> options) : base(options) { }
 
         public DbSet<Driver> Drivers { get; set; }
+        public DbSet<Team> Teams { get; set; }
     }
 }

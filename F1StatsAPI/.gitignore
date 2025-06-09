@@ -1,7 +1,8 @@
 ﻿# Visual Studio
 .vs/
 *.user
-*.suo
+*.suogit rm -r --cached .vs
+
 
 # Build results
 bin/
