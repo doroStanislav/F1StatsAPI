@@ -1,0 +1,12 @@
+﻿using Microsoft.EntityFrameworkCore;
+using F1StatsAPI.Models;
+
+namespace F1StatsAPI.Data
+{
+    public class F1StatsContext : DbContext
+    {
+        public F1StatsContext(DbContextOptions<F1StatsContext> options) : base(options) { }
+
+        public DbSet<Driver> Drivers { get; set; }
+    }
+}

@@ -1,0 +1,30 @@
+﻿# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build results
+bin/
+obj/
+out/
+Generated\ Files/
+
+# Nu include fișiere temporare sau cache
+*.log
+*.tlog
+*.cache
+
+# Fișiere de configurare locală
+appsettings.Development.json
+appsettings.Local.json
+
+# Fisiere de publicare temporare
+publish/
+tmp/
+
+# Rider / JetBrains IDEs
+.idea/
+
+# Sistemul de operare
+.DS_Store
+Thumbs.db

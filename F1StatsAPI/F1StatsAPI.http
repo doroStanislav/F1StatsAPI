@@ -1,0 +1,6 @@
+@F1StatsAPI_HostAddress = http://localhost:5084
+
+GET {{F1StatsAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
