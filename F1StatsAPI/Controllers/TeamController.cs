@@ -38,10 +38,104 @@ namespace F1StatsAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Team>> AddTeam(Team team)
         {
-            _context.Teams.Add(team);
-            await _context.SaveChangesAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }    
 
-            return CreatedAtAction(nameof(GetTeam), new {id = team.Id}, team);
+            _context.Teams.Add(team);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateException)
+            {
+                return StatusCode(500, "A database error occurred while saving the Team.");
+            }
+
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occured.");
+            }
+
+            return CreatedAtAction(nameof(GetTeam), new { id = team.Id }, team);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTeam(int id, Team team)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            if (id != team.Id)
+            {
+                return BadRequest("The ID in the URL does not match the ID in the request body.");
+            }
+
+            var existingTeam = await _context.Teams.FindAsync(id);
+
+            if (existingTeam == null)
+            {
+                return NotFound();
+            }
+
+            existingTeam.Name = team.Name;
+            existingTeam.TeamChief = team.TeamChief;
+            existingTeam.WorldChampionships = team.WorldChampionships;
+            existingTeam.BaseLocation = team.BaseLocation;
+            existingTeam.FoundationYear = team.FoundationYear;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateException)
+            {
+                return StatusCode(500, "An error occurred while updating the Team.");
+            }
+
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred.");
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTeam(int id)
+        {
+            var existingTeam = await _context.Teams.FindAsync(id);
+
+            if (existingTeam == null)
+            {
+                return NotFound();
+            }
+
+            _context.Teams.Remove(existingTeam);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateException)
+            {
+                return StatusCode(500, "A database error occurred while deleting Team.");
+            }
+
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred.");
+            }
+
+            return NoContent();
         }
     }
 }
