@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using F1StatsAPI.Validators;
 
 namespace F1StatsAPI.Models
 {
@@ -31,16 +32,7 @@ namespace F1StatsAPI.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [CustomValidation(typeof(Driver), nameof(ValidationDateOfBirth))]
+        [CustomValidation(typeof(DateValidator), nameof(DateValidator.ValidationDate))]
         public DateTime DateOfBirth { get; set; }
-
-        public static ValidationResult? ValidationDateOfBirth(DateTime date, ValidationContext context)
-        {
-            if (date.Date > DateTime.Today)
-            {
-                return new ValidationResult("Date of birth cannot be in the future.");
-            }
-            return ValidationResult.Success;
-        }
     }
 }
