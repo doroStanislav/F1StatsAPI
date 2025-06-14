@@ -37,7 +37,7 @@ namespace F1StatsAPI.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [CustomValidation(typeof(DateValidator), nameof(DateValidator.ValidationDate))]
+        [CustomValidation(typeof(DateValidator), nameof(DateValidator.ValidationBirthDate))]
         public DateTime DateOfBirth { get; set; }
     }
 }
