@@ -4,6 +4,7 @@ using F1StatsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace F1StatsAPI.Migrations
 {
     [DbContext(typeof(F1StatsContext))]
-    partial class F1StatsContextModelSnapshot : ModelSnapshot
+    [Migration("20250614203649_AddCarEntity")]
+    partial class AddCarEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,7 +90,7 @@ namespace F1StatsAPI.Migrations
                     b.ToTable("Drivers");
                 });
 
-            modelBuilder.Entity("F1StatsAPI.Models.GrandPrix", b =>
+            modelBuilder.Entity("F1StatsAPI.Models.Race", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,7 +98,7 @@ namespace F1StatsAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CircuitName")
+                    b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -116,7 +119,7 @@ namespace F1StatsAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GrandPrix");
+                    b.ToTable("Races");
                 });
 
             modelBuilder.Entity("F1StatsAPI.Models.Team", b =>

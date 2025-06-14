@@ -5,10 +5,10 @@ namespace F1StatsAPI.Data
 {
     public class F1StatsContext : DbContext
     {
-        public F1StatsContext(DbContextOptions<F1StatsContext> options) : base(options) { }
-
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<Race> Races { get; set; }
+        public DbSet<Car> Cars { get; set; }
         public DbSet<GrandPrix> GrandPrix { get; set; }
     }
 }
