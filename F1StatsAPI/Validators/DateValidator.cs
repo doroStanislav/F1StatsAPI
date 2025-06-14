@@ -4,7 +4,7 @@ namespace F1StatsAPI.Validators
 {
     public class DateValidator
     {
-        public static ValidationResult? ValidationDate(DateTime date, ValidationContext context)
+        public static ValidationResult? ValidationBirthDate(DateTime date, ValidationContext context)
         {
             if (date.Date > DateTime.Today)
             {
@@ -12,5 +12,17 @@ namespace F1StatsAPI.Validators
             }
             return ValidationResult.Success;
         }
+
+        public static ValidationResult? ValidationEventDate(DateTime date, ValidationContext context)
+        {
+            if (date.Date < DateTime.Today)
+            {
+                return new ValidationResult("Date cannot be in the past.");
+            }
+
+            return ValidationResult.Success;
+        }
     }
+
+        
 }

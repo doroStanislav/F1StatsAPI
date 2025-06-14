@@ -5,7 +5,7 @@ using F1StatsAPI.Validators;
 
 namespace F1StatsAPI.Models
 {
-    public class Race
+    public class GrandPrix
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,11 +17,11 @@ namespace F1StatsAPI.Models
 
         [Required]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "Country must be at least 2 characters.")]
-        public string Country { get; set; } = string.Empty;
+        public string CircuitName { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Date)]
-        [CustomValidation(typeof(DateValidator), nameof(DateValidator.ValidationDate))]
+        [CustomValidation(typeof(DateValidator), nameof(DateValidator.ValidationEventDate))]
         public DateTime Date { get; set; }
 
         [Required]
