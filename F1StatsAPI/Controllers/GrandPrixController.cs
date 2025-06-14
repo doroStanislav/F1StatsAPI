@@ -9,43 +9,43 @@ namespace F1StatsAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RaceController : ControllerBase
+    public class GrandPrixController : ControllerBase
     {
         private readonly F1StatsContext _context;
 
-        public RaceController(F1StatsContext context)
+        public GrandPrixController(F1StatsContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Race>>> GetRaces()
+        public async Task<ActionResult<IEnumerable<GrandPrix>>> GetRaces()
         {
-            return await _context.Races.ToListAsync();
+            return await _context.GrandPrix.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Race>> GetRace(int id)
+        public async Task<ActionResult<GrandPrix>> GetRace(int id)
         {
-            var race = await _context.Races.FindAsync(id);
+            var grandprix = await _context.GrandPrix.FindAsync(id);
 
-            if (race == null)
+            if (grandprix == null)
             {
                 return NotFound();
             }
 
-            return race;
+            return grandprix;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Race>> AddRace(Race race)
+        public async Task<ActionResult<GrandPrix>> AddRace(GrandPrix race)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Races.Add(race);
+            _context.GrandPrix.Add(race);
 
             try
             {
@@ -66,30 +66,30 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRace(Race race, int id)
+        public async Task<ActionResult> UpdateRace(GrandPrix grandprix, int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != race.Id)
+            if (id != grandprix.Id)
             {
                 return BadRequest("The ID in the URL does not match the ID in the request body.");
             }
 
-            var existingRace = await _context.Races.FindAsync(race.Id);
+            var existingGrandPrix = await _context.GrandPrix.FindAsync(grandprix.Id);
 
-            if (existingRace == null)
+            if (existingGrandPrix == null)
             {
                 return NotFound();
             }
 
-            existingRace.Name = race.Name;
-            existingRace.Country = race.Country;
-            existingRace.Date = race.Date;
-            existingRace.Laps = race.Laps;
-            existingRace.Distance = race.Distance;
+            existingGrandPrix.Name = grandprix.Name;
+            existingGrandPrix.CircuitName = grandprix.CircuitName;
+            existingGrandPrix.Date = grandprix.Date;
+            existingGrandPrix.Laps = grandprix.Laps;
+            existingGrandPrix.Distance = grandprix.Distance;
 
             try
             {
@@ -112,14 +112,14 @@ namespace F1StatsAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRace(int id)
         {
-            var existingRace = await _context.Races.FindAsync(id);
+            var existingRace = await _context.GrandPrix.FindAsync(id);
 
             if (existingRace == null)
             {
                 return NotFound();
             }
 
-            _context.Races.Remove(existingRace);
+            _context.GrandPrix.Remove(existingRace);
 
             try
             {
