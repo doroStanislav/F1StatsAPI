@@ -10,5 +10,6 @@ namespace F1StatsAPI.Data
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Race> Races { get; set; }
+        public DbSet<Car> Cars { get; set; }
     }
 }

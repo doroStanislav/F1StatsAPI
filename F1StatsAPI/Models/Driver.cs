@@ -16,6 +16,11 @@ namespace F1StatsAPI.Models
         public string Code { get; set; } = string.Empty;
 
         [Required]
+        [Range(1, 99)]
+        [CustomValidation(typeof(NumberValidation), nameof(NumberValidation.ValidateDriverNumber))]
+        public int Number { get; set; }
+
+        [Required]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be at least 2 characters.")]
         [RegularExpression(@"^[A-Z][a-z]+$", ErrorMessage = "Must start with a capital letter and contain only letters.")]
         public string GivenName { get; set; } = string.Empty;
