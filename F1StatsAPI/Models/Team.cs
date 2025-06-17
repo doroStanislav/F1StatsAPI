@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Identity.Client;
+using Microsoft.VisualBasic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace F1StatsAPI.Models
@@ -26,6 +29,14 @@ namespace F1StatsAPI.Models
 
         [Required]
         [Range(1900, 2100, ErrorMessage = "Foundation year must be between 1900 and 2100.")]
-        public int FoundationYear { get; set; } 
+        public int FoundationYear { get; set; }
+
+        [ForeignKey("Car")]
+        [Required]
+        public int CarId { get; set; }
+        public required Car Car { get; set; }
+
+        public List<Driver> Drivers { get; set; } = new();
+        public List<Result> Results { get; set; } = new();
     }
 }

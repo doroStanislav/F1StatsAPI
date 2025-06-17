@@ -35,6 +35,22 @@ namespace F1StatsAPI.Controllers
             return team;
         }
 
+        [HttpGet("{id}/results")]
+        public async Task<ActionResult<IEnumerable<Result>>> GetTeamResults(int id)
+        {
+            var team = await _context.Teams
+                .Include(t => t.Results)
+                .ThenInclude(t => t.GrandPrix)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(team.Results);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Team>> AddTeam(Team team)
         {
