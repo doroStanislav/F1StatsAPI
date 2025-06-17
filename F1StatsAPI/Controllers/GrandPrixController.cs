@@ -19,13 +19,13 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GrandPrix>>> GetRaces()
+        public async Task<ActionResult<IEnumerable<GrandPrix>>> GetGrandPrix()
         {
             return await _context.GrandPrix.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GrandPrix>> GetRace(int id)
+        public async Task<ActionResult<GrandPrix>> GetGrandPrixById(int id)
         {
             var grandprix = await _context.GrandPrix.FindAsync(id);
 
@@ -38,35 +38,35 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GrandPrix>> AddRace(GrandPrix race)
+        public async Task<ActionResult<GrandPrix>> AddGrandPrix(GrandPrix grandPrix)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.GrandPrix.Add(race);
+            _context.GrandPrix.Add(grandPrix);
 
             try
             {
                 await _context.SaveChangesAsync();
             }
 
-            catch (DbException)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, "A database error occurred while adding the Race.");
             }
 
             catch (Exception)
             {
-                return StatusCode(500, "An unexpectex error occured.");
+                return StatusCode(500, "An unexpected error occured.");
             }
 
-            return NoContent();
+            return CreatedAtAction(nameof(GetGrandPrixById), new { id = grandPrix.Id }, grandPrix);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRace(GrandPrix grandprix, int id)
+        public async Task<IActionResult> UpdateGrandPrix(GrandPrix grandprix, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -96,9 +96,9 @@ namespace F1StatsAPI.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            catch (DbException)
+            catch (DbUpdateException)
             {
-                return StatusCode(500, "A database error occured while updating Race.");
+                return StatusCode(500, "A database error occured while updating Grand Prix.");
             }
 
             catch (Exception)
@@ -110,7 +110,7 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteRace(int id)
+        public async Task<ActionResult> DeleteGrandPrix(int id)
         {
             var existingRace = await _context.GrandPrix.FindAsync(id);
 
@@ -126,9 +126,9 @@ namespace F1StatsAPI.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            catch (DbException)
+            catch (DbUpdateException)
             {
-                return StatusCode(500, "A database error occurred while deleting Race.");
+                return StatusCode(500, "A database error occurred while deleting Grand Prix.");
             }
 
             catch (Exception)
