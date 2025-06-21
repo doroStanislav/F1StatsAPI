@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using F1StatsAPI.Data;
 using F1StatsAPI.Models;
+using F1StatsAPI.Services;
 using System.Threading.Tasks;
+using System.Reflection.Metadata.Ecma335;
 
 namespace F1StatsAPI.Controllers
 {
@@ -10,134 +12,69 @@ namespace F1StatsAPI.Controllers
     [Route("api/[controller]")]
     public class DriverController : ControllerBase
     {
-        private readonly F1StatsContext _context;
+        private readonly IDriverService _driverService;
 
-        public DriverController(F1StatsContext context)
+        public DriverController(IDriverService driverService)
         {
-            _context = context;
+            _driverService = driverService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Driver>> GetDrivers()
+        public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
         {
-            return _context.Drivers.ToList();
+            var drivers = await _driverService.GetDriversAsync();
+            return Ok(drivers);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Driver>> GetDriver(int id)
+        public async Task<ActionResult<Driver>> GetDriverById(int id)
         {
-            var driver = await _context.Drivers.FindAsync(id);
+            var driver = await _driverService.GetDriverByIdAsync(id);
+            if (driver == null) return NotFound();
 
-            if (driver == null)
-            {
-                return NotFound();
-            }
-
-            return driver;
+            return Ok(driver);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Driver>> AddDriver(Driver driver)
+        public async Task<ActionResult<Driver?>> AddDriver(Driver driver)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var savedDriver = await _driverService.AddDriverAsync(driver);
+
+            if (savedDriver == null)
             {
-                return BadRequest(ModelState);
+                return StatusCode(500, "A database error occurred while adding the Driver.");
             }
 
-            _context.Drivers.Add(driver);
-            try 
-            {
-                await _context.SaveChangesAsync();
-            }
-
-            catch(DbUpdateException)
-            {
-                return StatusCode(500, "A database error occurred while saving the driver.");
-            }
-
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occured.");
-            }
-
-            var savedDriver = _context.Drivers.FirstOrDefault(d => 
-                d.Code == driver.Code && 
-                d.GivenName == driver.GivenName);
-
-            return CreatedAtAction(nameof(GetDriver), new {id = driver.Id}, driver);
+            return CreatedAtAction(nameof(GetDriverById), new { id = savedDriver.Id }, savedDriver);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDriver(int id, Driver driver) 
+        public async Task<ActionResult> UpdateDriver(int id, Driver driver)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (id != driver.Id) return BadRequest("ID mismatch");
 
-            if (id !=  driver.Id)
-            {
-                return BadRequest("ID in URL does not match ID in body.");
-            }
+            var updatedDriver = await _driverService.UpdateDriverAsync(id, driver);
 
-            var existingDriver = await _context.Drivers.FindAsync(id);
-
-            if (existingDriver == null)
+            if (updatedDriver == false)
             {
-                return NotFound();
-            }
-            
-            existingDriver.Code = driver.Code;
-            existingDriver.GivenName = driver.GivenName;
-            existingDriver.FamilyName = driver.FamilyName;
-            existingDriver.Country = driver.Country;
-            existingDriver.DateOfBirth = driver.DateOfBirth;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-
-            catch (DbUpdateException)
-            {
-                return StatusCode(500, "A database error occurred while updating the driver.");
-            }
-
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occured.");
+                return StatusCode(500, "A database error occured while updating the Driver.");
             }
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDriver(int id)
+        public async Task<ActionResult> DeleteDriver(int id)
         {
-            var driver = await _context.Drivers.FindAsync(id);
+            var deletedDriver = await _driverService.DeleteDriverAsync(id);
 
-            if (driver == null)
+            if (deletedDriver == false)
             {
-                return NotFound();
+                return StatusCode(500, "A database error occured while deleting the Driver.");
             }
 
-            _context.Drivers.Remove(driver);
-
-            try
-            {
-               await _context.SaveChangesAsync();
-            }
-
-            catch (DbUpdateException)
-            {
-                return StatusCode(500, "A database error occurred while deleting the driver.");
-            }
-
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occured.");
-            }
-            
             return NoContent();
         }
     }   

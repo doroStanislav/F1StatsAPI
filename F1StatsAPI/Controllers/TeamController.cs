@@ -2,6 +2,7 @@
 using F1StatsAPI.Data;
 using F1StatsAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using F1StatsAPI.Services;
 
 namespace F1StatsAPI.Controllers
 {
@@ -9,116 +10,69 @@ namespace F1StatsAPI.Controllers
     [Route("api/[controller]")]
     public class TeamController : ControllerBase
     {
-        private readonly F1StatsContext _context;
+        private readonly TeamService _teamService;
 
-        public TeamController(F1StatsContext context)
+        public TeamController(TeamService teamService)
         {
-            _context = context;
+            _teamService = teamService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
         {
-            return await _context.Teams.ToListAsync();
+            var teams = await _teamService.GetTeamsAsync();
+            return Ok(teams);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Team>> GetTeam(int id)
         {
-            var team = await _context.Teams.FindAsync(id);
+            var team = await _teamService.GetTeamByIdAsync(id);
+            if (team == null) return NotFound();
 
-            if (team == null)
-            {
-                return NotFound();
-            }
-
-            return team;
+            return Ok(team);
         }
 
         [HttpGet("{id}/results")]
         public async Task<ActionResult<IEnumerable<Result>>> GetTeamResults(int id)
         {
-            var team = await _context.Teams
-                .Include(t => t.Results)
-                .ThenInclude(t => t.GrandPrix)
-                .FirstOrDefaultAsync(t => t.Id == id);
+            var teamResults = await _teamService.GetTeamResultAsync(id);
+            if (!teamResults.Any()) return NotFound();
 
-            if (team == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(team.Results);
+            return Ok(teamResults);
         }
 
         [HttpPost]
         public async Task<ActionResult<Team>> AddTeam(Team team)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }    
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            _context.Teams.Add(team);
+            var validationResult = await _teamService.ValidateForeignKeys(team);
+            if (validationResult != null) return BadRequest(validationResult);
+            
+            var savedTeam = await _teamService.AddTeamAsync(team);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-
-            catch (DbUpdateException)
+            if (savedTeam == null)
             {
                 return StatusCode(500, "A database error occurred while saving the Team.");
             }
 
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occured.");
-            }
-
-            return CreatedAtAction(nameof(GetTeam), new { id = team.Id }, team);
+            return CreatedAtAction(nameof(GetTeam), new { id = savedTeam.Id }, savedTeam);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTeam(int id, Team team)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (id != team.Id) return BadRequest("The ID in the URL does not match the ID in the request body.");
 
+            var validationResult = await _teamService.ValidateForeignKeys(team);
+            if (validationResult != null) return BadRequest(validationResult);
 
-            if (id != team.Id)
-            {
-                return BadRequest("The ID in the URL does not match the ID in the request body.");
-            }
-
-            var existingTeam = await _context.Teams.FindAsync(id);
-
-            if (existingTeam == null)
-            {
-                return NotFound();
-            }
-
-            existingTeam.Name = team.Name;
-            existingTeam.TeamChief = team.TeamChief;
-            existingTeam.WorldChampionships = team.WorldChampionships;
-            existingTeam.BaseLocation = team.BaseLocation;
-            existingTeam.FoundationYear = team.FoundationYear;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-
-            catch (DbUpdateException)
+            var updatedTeam = await _teamService.UpdateTeamAsync(id, team);
+            if (updatedTeam == false)
             {
                 return StatusCode(500, "An error occurred while updating the Team.");
-            }
-
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occurred.");
             }
 
             return NoContent();
@@ -127,28 +81,10 @@ namespace F1StatsAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeam(int id)
         {
-            var existingTeam = await _context.Teams.FindAsync(id);
-
-            if (existingTeam == null)
-            {
-                return NotFound();
-            }
-
-            _context.Teams.Remove(existingTeam);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-
-            catch (DbUpdateException)
+            var deletedTeam = await _teamService.DeleteTeamAsync(id);
+            if (deletedTeam == false)
             {
                 return StatusCode(500, "A database error occurred while deleting Team.");
-            }
-
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occurred.");
             }
 
             return NoContent();
