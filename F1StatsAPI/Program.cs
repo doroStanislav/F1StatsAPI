@@ -1,6 +1,7 @@
 using F1StatsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using F1StatsAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = false;
 });
+builder.Services.AddScoped<IDriverService, DriverService>();
 
 var app = builder.Build();
 

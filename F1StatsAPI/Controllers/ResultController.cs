@@ -1,6 +1,7 @@
 ﻿using F1StatsAPI.Data;
 using F1StatsAPI.Migrations;
 using F1StatsAPI.Models;
+using F1StatsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -12,112 +13,61 @@ namespace F1StatsAPI.Controllers
     [Route("api/[controller]")]
     public class ResultController : ControllerBase
     {
-        private readonly F1StatsContext _context;
+        private readonly IResultService _resultService;
 
-        public ResultController(F1StatsContext context)
+        public ResultController(IResultService resultService)
         {
-            _context = context;
+            _resultService = resultService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Result>>> GetResults()
         {
-            return await GetFullResultQuery().ToListAsync();
+            var results = await _resultService.GetResultsAsync();
+            return Ok(results);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Result>> GetResult(int id)
+        public async Task<ActionResult<Result>> GetResultById(int id)
         {
-            var existingResult = await GetFullResultQuery().FirstOrDefaultAsync(r => r.Id == id);
+            var existingResult = await _resultService.GetResultByIdAsync(id);
+            if (existingResult == null) return NotFound();
 
-            if (existingResult == null)
-            {
-                return NotFound();
-            }
-
-            return existingResult;
+            return Ok(existingResult);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddResult(Result result)
+        public async Task<ActionResult<Result?>> AddResult(Result result)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var validationResult = await ValidateForeignKeys(result);
+            var validationResult = await _resultService.ValidateForeignKeys(result);
             if (validationResult != null)
-                return validationResult;
+                return BadRequest(validationResult);
 
-            await _context.Results.AddAsync(result);
+            var savedResult = await _resultService.AddResultAsync(result);
 
-            try
+            if (savedResult == null)
             {
-                await _context.SaveChangesAsync();
+                return StatusCode(500, "A database error occurred while adding the Result.");
             }
 
-            catch (DbException)
-            {
-                return StatusCode(500, "A database error occurred while adding the Race.");
-            }
-
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpectex error occured.");
-            }
-
-            return NoContent();
+            return CreatedAtAction(nameof(GetResultById), new { id = savedResult.Id }, savedResult);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateResult(int id, Result result)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (id != result.Id) return BadRequest("ID mismatch");
 
-            if (id != result.Id)
-            {
-                return BadRequest("ID mismatch");
-            }
+            var validation = await _resultService.ValidateForeignKeys(result);
+            if (validation != null) return BadRequest(validation);
 
-            var existingResult = await GetFullResultQuery().FirstOrDefaultAsync(r => r.Id == id);
-            if (existingResult == null)
-            {
-                return NotFound();
-            }
-
-            var validation = await ValidateForeignKeys(result);
-            if (validation != null)
-            {
-                return validation;
-            }
-
-            existingResult.GrandPrixId = result.GrandPrixId;
-            existingResult.TeamId = result.TeamId;
-            existingResult.DriverId = result.DriverId;
-            existingResult.CarId = result.CarId;
-
-            existingResult.Position = result.Position;
-            existingResult.Time = result.Time;
-            existingResult.Points = result.Points;
-            existingResult.DidNotFinish = result.DidNotFinish;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-
-            catch (DbUpdateException)
+            var existingResult = await _resultService.UpdateResultAsync(id, result);
+            if (existingResult == false)
             {
                 return StatusCode(500, "A database error occurred while updating the result.");
-            }
-
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occured.");
             }
 
             return NoContent();
@@ -126,65 +76,14 @@ namespace F1StatsAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteResult(int id)
         {
-            var existingResult = await _context.Results.FindAsync(id);
+            var deletedResult = await _resultService.DeleteResultAsync(id);
 
-            if (existingResult == null)
-            {
-                return NotFound();
-            }
-
-            _context.Results.Remove(existingResult);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-
-            catch (DbUpdateException)
+            if (deletedResult == false) 
             {
                 return StatusCode(500, "A database error occurred while deleting the result.");
             }
 
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occured.");
-            }
-
             return NoContent();
-        }
-
-        private IQueryable<Result> GetFullResultQuery()
-        {
-            return _context.Results
-                .Include(g => g.GrandPrix)
-                .Include(t => t.Team)
-                .Include(d => d.Driver)
-                .Include(c => c.Car);
-        }
-
-        private async Task<ActionResult?> ValidateForeignKeys(Result result)
-        {
-            if (!await _context.GrandPrix.AnyAsync(g => g.Id == result.GrandPrixId))
-            {
-                return BadRequest($"GrandPrix with ID {result.GrandPrixId} does not exist.");
-            }
-
-            if (!await _context.Teams.AnyAsync(t => t.Id == result.TeamId))
-            {
-                return BadRequest($"Team with ID {result.TeamId} does not exist.");
-            }
-
-            if (!await _context.Drivers.AnyAsync(d => d.Id == result.DriverId))
-            {
-                return BadRequest($"Driver with ID {result.DriverId} does not exist.");
-            }
-
-            if (!await _context.Cars.AnyAsync(c => c.Id == result.CarId))
-            {
-                return BadRequest($"Car with ID {result.CarId} does not exist.");
-            }
-
-            return null;
         }
     }
 }
