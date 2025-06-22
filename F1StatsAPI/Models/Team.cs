@@ -34,7 +34,7 @@ namespace F1StatsAPI.Models
         [ForeignKey("Car")]
         [Required]
         public int CarId { get; set; }
-        public required Car Car { get; set; }
+        public Car? Car { get; set; }
 
         public List<Driver> Drivers { get; set; } = new();
         public List<Result> Results { get; set; } = new();

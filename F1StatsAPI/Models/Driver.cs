@@ -43,6 +43,6 @@ namespace F1StatsAPI.Models
         [ForeignKey("Team")]
         [Required]
         public int TeamId { get; set; }
-        public required Team Team { get; set; }
+        public Team? Team { get; set; }
     }
 }
