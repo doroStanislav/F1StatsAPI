@@ -1,26 +1,34 @@
-﻿using F1StatsAPI.Data;
+﻿using AutoMapper;
+using F1StatsAPI.Data;
 using F1StatsAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using F1StatsAPI.DTOs;
 
 namespace F1StatsAPI.Services
 {
     public class GrandPrixService : IGrandPrixService
     {
         private readonly F1StatsContext _context;
+        private readonly IMapper _mapper;
 
-        public GrandPrixService(F1StatsContext context)
+        public GrandPrixService(F1StatsContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GrandPrix>> GetAllGrandPrixAsync()
+        public async Task<IEnumerable<GrandPrixDTO>> GetAllGrandPrixAsync()
         {
-            return await _context.GrandPrix.ToListAsync();
+            var grandPrixList = await _context.GrandPrix.ToListAsync();
+            return _mapper.Map<IEnumerable<GrandPrixDTO>>(grandPrixList);
         }
 
-        public async Task<GrandPrix?> GetGrandPrixByIdAsync(int id)
+        public async Task<GrandPrixDTO?> GetGrandPrixByIdAsync(int id)
         {
-            return await _context.GrandPrix.FindAsync(id); 
+            var grandPrix = await _context.GrandPrix.FindAsync(id);
+            if (grandPrix == null) return null;
+
+            return _mapper.Map<GrandPrixDTO>(grandPrix);
         }
 
         public async Task<GrandPrix?> AddGrandPrixAsync(GrandPrix grandPrix)

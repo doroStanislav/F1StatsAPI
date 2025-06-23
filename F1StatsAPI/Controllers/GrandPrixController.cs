@@ -4,6 +4,7 @@ using F1StatsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using F1StatsAPI.DTOs;
 
 
 namespace F1StatsAPI.Controllers
@@ -20,14 +21,14 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GrandPrix>>> GetGrandPrix()
+        public async Task<ActionResult<IEnumerable<GrandPrixDTO>>> GetGrandPrix()
         {
             var allGrandPrix = await _grandPrixService.GetAllGrandPrixAsync();
             return Ok(allGrandPrix);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GrandPrix>> GetGrandPrixById(int id)
+        public async Task<ActionResult<GrandPrixDTO?>> GetGrandPrixById(int id)
         {
             var grandprix = await _grandPrixService.GetGrandPrixByIdAsync(id);
             if (grandprix == null) return NotFound();
