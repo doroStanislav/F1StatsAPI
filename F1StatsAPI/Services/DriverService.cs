@@ -1,26 +1,35 @@
-﻿using F1StatsAPI.Data;
+﻿using AutoMapper;
+using F1StatsAPI.Data;
 using F1StatsAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using F1StatsAPI.DTOs;
 
 namespace F1StatsAPI.Services
 {
     public class DriverService : IDriverService
     {
         private readonly F1StatsContext _context;
+        private readonly IMapper _mapper;
 
-        public DriverService(F1StatsContext context)
+        public DriverService(F1StatsContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Driver>> GetDriversAsync()
+        public async Task<IEnumerable<DriverDTO>> GetDriversAsync()
         {
-            return await _context.Drivers.ToListAsync();
+            var drivers = await _context.Drivers.Include(d => d.Team).ToListAsync();
+            return _mapper.Map<IEnumerable<DriverDTO>>(drivers);
         }
 
-        public async Task<Driver?> GetDriverByIdAsync(int id)
+        public async Task<DriverDTO?> GetDriverByIdAsync(int id)
         {
-            return await _context.Drivers.FindAsync(id);
+            var driver = await _context.Drivers
+                .Include(d => d.Team)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            return driver == null ? null : _mapper.Map<DriverDTO>(driver); 
         }
 
         public async Task<Driver?> AddDriverAsync(Driver driver)
