@@ -11,6 +11,8 @@ namespace F1StatsAPI.Mappings
             CreateMap<Driver, DriverDTO>()
                 .ForMember(dest => dest.TeamName,
                  opt => opt.MapFrom(src => src.Team != null? src.Team.Name : null));
+
+            CreateMap<GrandPrix, GrandPrixDTO>();
         }
     }
 }

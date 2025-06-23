@@ -5,6 +5,7 @@ using F1StatsAPI.Models;
 using F1StatsAPI.Services;
 using System.Threading.Tasks;
 using System.Reflection.Metadata.Ecma335;
+using F1StatsAPI.DTOs;
 
 namespace F1StatsAPI.Controllers
 {
@@ -20,7 +21,7 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
+        public async Task<ActionResult<IEnumerable<DriverDTO>>> GetDrivers()
         {
             var drivers = await _driverService.GetDriversAsync();
             return Ok(drivers);
