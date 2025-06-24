@@ -1,33 +1,42 @@
 ﻿using F1StatsAPI.Models;
 using F1StatsAPI.Data;
 using F1StatsAPI.Services;
+using F1StatsAPI.DTOs;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace F1StatsAPI.Services
 {
     public class TeamService : ITeamService
     {
         private readonly F1StatsContext _context;
-        public TeamService(F1StatsContext context) 
+        private readonly Mapper _mapper;
+        public TeamService(F1StatsContext context, Mapper mapper) 
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Team>> GetTeamsAsync()
+        public async Task<IEnumerable<TeamDTO>> GetTeamsAsync()
         {
-            return await _context.Teams
+            var teams = await _context.Teams
                 .Include(c => c.Car)
                 .Include(d => d.Drivers)
                 .ToListAsync();
+            return _mapper.Map<IEnumerable<TeamDTO>>(teams);
         }
 
-        public async Task<Team?> GetTeamByIdAsync(int id)
+        public async Task<TeamDTO?> GetTeamByIdAsync(int id)
         {
-            return await _context.Teams
+            var team = await _context.Teams
                 .Include(c => c.Car)
                 .Include(d => d.Drivers)
                 .FirstOrDefaultAsync(d => d.Id == id);
+            if (team == null) return null;
+            
+            return _mapper.Map<TeamDTO>(team);
         }
+
         public async Task<IEnumerable<Result>> GetTeamResultAsync(int id)
         {
             try

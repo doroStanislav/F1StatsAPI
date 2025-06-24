@@ -13,6 +13,12 @@ namespace F1StatsAPI.Mappings
                  opt => opt.MapFrom(src => src.Team != null? src.Team.Name : null));
 
             CreateMap<GrandPrix, GrandPrixDTO>();
+
+            CreateMap<Team, TeamDTO>()
+                .ForMember(dest => dest.DriverNames,
+                    opt => opt.MapFrom(src => 
+                        src.Drivers.Select(d => d.GivenName + " " + d.FamilyName).ToList()
+                    ));
         }
     }
 }
