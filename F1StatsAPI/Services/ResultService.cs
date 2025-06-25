@@ -4,35 +4,41 @@ using F1StatsAPI.Data;
 using F1StatsAPI.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Runtime.InteropServices;
+using F1StatsAPI.DTOs;
+using AutoMapper;
 
 namespace F1StatsAPI.Services
 {
     public class ResultService : IResultService
     {
         private readonly F1StatsContext _context;
-        public ResultService(F1StatsContext context) 
+        private readonly Mapper _mapper;
+        public ResultService(F1StatsContext context, Mapper mapper) 
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Result>> GetResultsAsync()
+        public async Task<IEnumerable<ResultDTO>> GetResultsAsync()
         {
-            return await _context.Results
+            var results = await _context.Results
                 .Include(g => g.GrandPrix)
                 .Include(t => t.Team)
                 .Include(d => d.Driver)
                 .Include(c => c.Car)
                 .ToListAsync();
+            return _mapper.Map<IEnumerable<ResultDTO>>(results);
         }
 
-        public async Task<Result?> GetResultByIdAsync(int id)
+        public async Task<ResultDTO?> GetResultByIdAsync(int id)
         {
-            return await _context.Results
+            var result = await _context.Results
                 .Include(g => g.GrandPrix)
                 .Include(t => t.Team)
                 .Include(d => d.Driver)
                 .Include(c => c.Car)
                 .FirstOrDefaultAsync(r => r.Id == id);
+            return _mapper.Map<ResultDTO?>(result);
         }
 
         public async Task<Result?> AddResultAsync(Result result)
