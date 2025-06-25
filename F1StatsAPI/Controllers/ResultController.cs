@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Data.Common;
+using F1StatsAPI.DTOs;
 
 namespace F1StatsAPI.Controllers
 {
@@ -21,14 +22,14 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Result>>> GetResults()
+        public async Task<ActionResult<IEnumerable<ResultDTO>>> GetResults()
         {
             var results = await _resultService.GetResultsAsync();
             return Ok(results);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Result>> GetResultById(int id)
+        public async Task<ActionResult<ResultDTO>> GetResultById(int id)
         {
             var existingResult = await _resultService.GetResultByIdAsync(id);
             if (existingResult == null) return NotFound();

@@ -28,7 +28,7 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Driver>> GetDriverById(int id)
+        public async Task<ActionResult<DriverDTO>> GetDriverById(int id)
         {
             var driver = await _driverService.GetDriverByIdAsync(id);
             if (driver == null) return NotFound();

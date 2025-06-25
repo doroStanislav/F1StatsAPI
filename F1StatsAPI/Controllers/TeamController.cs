@@ -3,6 +3,7 @@ using F1StatsAPI.Data;
 using F1StatsAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using F1StatsAPI.Services;
+using F1StatsAPI.DTOs;
 
 namespace F1StatsAPI.Controllers
 {
@@ -18,14 +19,14 @@ namespace F1StatsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
+        public async Task<ActionResult<IEnumerable<TeamDTO>>> GetTeams()
         {
             var teams = await _teamService.GetTeamsAsync();
             return Ok(teams);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Team>> GetTeam(int id)
+        public async Task<ActionResult<TeamDTO>> GetTeam(int id)
         {
             var team = await _teamService.GetTeamByIdAsync(id);
             if (team == null) return NotFound();

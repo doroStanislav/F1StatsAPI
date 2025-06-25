@@ -33,5 +33,7 @@ namespace F1StatsAPI.Models
 
         [Required]
         public bool DidNotFinish { get; set; }
+
+        public string? Status { get; set; }
     }
 }
