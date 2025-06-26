@@ -1,25 +1,13 @@
 ﻿using AutoMapper;
-using F1StatsAPI.DTOs;
 using F1StatsAPI.Models;
-using F1StatsAPI.Mappings;
+using F1StatsAPI.DTOs;
 
 namespace F1StatsAPI.Mappings
 {
-    public class AutoMapperProfile : Profile
+    public class ResultProfile : Profile
     {
-        public AutoMapperProfile() 
+        public ResultProfile()
         {
-            CreateMap<Driver, DriverDTO>()
-                .ForMember(dest => dest.TeamName,
-                 opt => opt.MapFrom(src => src.Team != null? src.Team.Name : null));
-
-            CreateMap<GrandPrix, GrandPrixDTO>();
-
-            CreateMap<Team, TeamDTO>()
-                .ForMember(dest => dest.DriverNames,
-                    opt => opt.MapFrom(src => 
-                        src.Drivers.Select(d => d.GivenName + " " + d.FamilyName).ToList()
-                    ));
             // Mapping fields from related GrandPrix entity (null-safe)
             CreateMap<Result, ResultDTO>()
                 .ForMember(dest => dest.GrandPrixName,
