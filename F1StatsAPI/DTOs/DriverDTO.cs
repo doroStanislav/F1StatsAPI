@@ -6,7 +6,7 @@
         public string Code { get; set; } = string.Empty;
         public string GivenName { get; set; } = string.Empty;
         public string FamilyName { get; set; } = string.Empty;
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
         public string? TeamName { get; set; }
     }
