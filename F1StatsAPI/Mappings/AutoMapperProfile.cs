@@ -12,11 +12,7 @@ namespace F1StatsAPI.Mappings
             
             
 
-            CreateMap<Team, TeamDTO>()
-                .ForMember(dest => dest.DriverNames,
-                    opt => opt.MapFrom(src => 
-                        src.Drivers.Select(d => d.GivenName + " " + d.FamilyName).ToList()
-                    ));
+            
             // Mapping fields from related GrandPrix entity (null-safe)
             CreateMap<Result, ResultDTO>()
                 .ForMember(dest => dest.GrandPrixName,
