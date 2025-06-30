@@ -25,7 +25,7 @@ namespace F1StatsAPI.Models
         public int Position { get; set; }
 
         [Range(0, 25, ErrorMessage = "Points must be between 0 and 25.")]
-        public int Points? { get; set; }
+        public int? Points { get; set; }
 
         public TimeSpan? Time { get; set; }
         public string? GapToLeader { get; set; }
