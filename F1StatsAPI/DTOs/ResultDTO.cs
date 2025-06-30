@@ -10,6 +10,7 @@
 
         public int? Position { get; set; }
         public int Points { get; set; }
+        public int? Laps { get; set; }
 
         public string? RaceStatus { get; set; }
     }

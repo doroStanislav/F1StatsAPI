@@ -26,13 +26,14 @@ namespace F1StatsAPI.Models
 
         [Range(0, 25, ErrorMessage = "Points must be between 0 and 25.")]
         public int? Points { get; set; }
+        [Range(0, 99, ErrorMessage = "Laps number must be between 0 and 99.")]
+        public int? Laps { get; set; }
 
         public TimeSpan? Time { get; set; }
         public string? GapToLeader { get; set; }
 
         [Required]
         public bool DidNotFinish { get; set; }
-
         public string? Status { get; set; }
     }
 }
