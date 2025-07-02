@@ -40,6 +40,8 @@ namespace F1StatsAPI.Models
         [CustomValidation(typeof(DateValidator), nameof(DateValidator.ValidationBirthDate))]
         public DateTime DateOfBirth { get; set; }
 
+        public bool? IsActive { get; set; }
+
         [ForeignKey("Team")]
         [Required]
         public int TeamId { get; set; }
