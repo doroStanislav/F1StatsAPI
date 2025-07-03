@@ -4,6 +4,7 @@ using F1StatsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace F1StatsAPI.Migrations
 {
     [DbContext(typeof(F1StatsContext))]
-    partial class F1StatsContextModelSnapshot : ModelSnapshot
+    [Migration("20250703183439_CheckAlignmentTest")]
+    partial class CheckAlignmentTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,6 +49,15 @@ namespace F1StatsAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cars");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChassisCode = "SF-25",
+                            Name = "Ferrari SF-25",
+                            PoweUnit = "Ferrari"
+                        });
                 });
 
             modelBuilder.Entity("F1StatsAPI.Models.Driver", b =>
@@ -93,6 +105,32 @@ namespace F1StatsAPI.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Drivers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "LEC",
+                            Country = "Monaco",
+                            DateOfBirth = new DateTime(1997, 10, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FamilyName = "Leclerc",
+                            GivenName = "Charles",
+                            IsActive = false,
+                            Number = 16,
+                            TeamId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "HAM",
+                            Country = "United Kingdom",
+                            DateOfBirth = new DateTime(1985, 1, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FamilyName = "Hamilton",
+                            GivenName = "Lewis",
+                            IsActive = false,
+                            Number = 44,
+                            TeamId = 1
+                        });
                 });
 
             modelBuilder.Entity("F1StatsAPI.Models.GrandPrix", b =>
@@ -125,6 +163,17 @@ namespace F1StatsAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GrandPrix");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CircuitName = "Albert Park Circuit",
+                            Date = new DateTime(2025, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Distance = 306.12400000000002,
+                            Laps = 58,
+                            Name = "Australian Grand Prix"
+                        });
                 });
 
             modelBuilder.Entity("F1StatsAPI.Models.Result", b =>
@@ -179,6 +228,32 @@ namespace F1StatsAPI.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Results");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CarId = 1,
+                            DidNotFinish = false,
+                            DriverId = 1,
+                            GapToLeader = "+19.826s",
+                            GrandPrixId = 1,
+                            Points = 4,
+                            Position = 8,
+                            TeamId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CarId = 1,
+                            DidNotFinish = false,
+                            DriverId = 2,
+                            GapToLeader = "+22.473s",
+                            GrandPrixId = 1,
+                            Points = 1,
+                            Position = 10,
+                            TeamId = 1
+                        });
                 });
 
             modelBuilder.Entity("F1StatsAPI.Models.Team", b =>
@@ -219,6 +294,18 @@ namespace F1StatsAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("Teams");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BaseLocation = "Maranello, Italy",
+                            CarId = 1,
+                            FoundationYear = 1929,
+                            Name = "Scuderia Ferrari",
+                            TeamChief = "Frédéric Vasseur",
+                            WorldChampionships = 16
+                        });
                 });
 
             modelBuilder.Entity("F1StatsAPI.Models.Driver", b =>
