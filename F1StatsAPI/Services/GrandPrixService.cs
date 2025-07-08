@@ -3,6 +3,7 @@ using F1StatsAPI.Data;
 using F1StatsAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using F1StatsAPI.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace F1StatsAPI.Services
 {

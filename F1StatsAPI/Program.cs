@@ -19,7 +19,9 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = false;
 });
 builder.Services.AddScoped<IDriverService, DriverService>();
-
+builder.Services.AddScoped<IGrandPrixService, GrandPrixService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IResultService, ResultService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

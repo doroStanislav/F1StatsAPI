@@ -12,8 +12,8 @@ namespace F1StatsAPI.Services
     public class ResultService : IResultService
     {
         private readonly F1StatsContext _context;
-        private readonly Mapper _mapper;
-        public ResultService(F1StatsContext context, Mapper mapper) 
+        private readonly IMapper _mapper;
+        public ResultService(F1StatsContext context, IMapper mapper) 
         {
             _context = context;
             _mapper = mapper;

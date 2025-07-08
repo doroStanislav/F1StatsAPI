@@ -13,6 +13,6 @@ namespace F1StatsAPI.Models
         public string ChassisCode { get; set; } = string.Empty;
 
         [Required]
-        public string PoweUnit { get; set; } = string.Empty;
+        public string PowerUnit { get; set; } = string.Empty;
     }
 }
