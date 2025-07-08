@@ -4,14 +4,15 @@ using F1StatsAPI.Services;
 using F1StatsAPI.DTOs;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Microsoft.Identity.Client;
 
 namespace F1StatsAPI.Services
 {
     public class TeamService : ITeamService
     {
         private readonly F1StatsContext _context;
-        private readonly Mapper _mapper;
-        public TeamService(F1StatsContext context, Mapper mapper) 
+        private readonly IMapper _mapper;
+        public TeamService(F1StatsContext context, IMapper mapper) 
         {
             _context = context;
             _mapper = mapper;
@@ -68,7 +69,6 @@ namespace F1StatsAPI.Services
                 return null;
             }
         }
-
         public async Task<bool> UpdateTeamAsync(int id, Team team)
         {
             try
@@ -111,7 +111,6 @@ namespace F1StatsAPI.Services
                 return false;
             }
         }
-
         public async Task<string?> ValidateForeignKeys(Team team)
         {
             if (!await _context.Cars.AnyAsync(c => c.Id == team.CarId))

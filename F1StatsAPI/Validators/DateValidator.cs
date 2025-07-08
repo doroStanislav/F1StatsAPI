@@ -12,17 +12,5 @@ namespace F1StatsAPI.Validators
             }
             return ValidationResult.Success;
         }
-
-        public static ValidationResult? ValidationEventDate(DateTime date, ValidationContext context)
-        {
-            if (date.Date < DateTime.Today)
-            {
-                return new ValidationResult("Date cannot be in the past.");
-            }
-
-            return ValidationResult.Success;
-        }
-    }
-
-        
+    } 
 }

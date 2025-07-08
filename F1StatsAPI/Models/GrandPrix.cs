@@ -21,7 +21,6 @@ namespace F1StatsAPI.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [CustomValidation(typeof(DateValidator), nameof(DateValidator.ValidationEventDate))]
         public DateTime Date { get; set; }
 
         [Required]

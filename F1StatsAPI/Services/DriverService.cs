@@ -19,7 +19,10 @@ namespace F1StatsAPI.Services
 
         public async Task<IEnumerable<DriverDTO>> GetDriversAsync()
         {
-            var drivers = await _context.Drivers.Include(d => d.Team).ToListAsync();
+            var drivers = await _context.Drivers
+                .Where(d => d.IsActive)
+                .Include(d => d.Team)
+                .ToListAsync();
             return _mapper.Map<IEnumerable<DriverDTO>>(drivers);
         }
 
