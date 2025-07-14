@@ -1,7 +1,7 @@
 ﻿using F1StatsAPI.DTOs;
 using F1StatsAPI.Models;
 
-namespace F1StatsAPI.Services
+namespace F1StatsAPI.Services.Interfaces
 {
     public interface IGrandPrixService
     {

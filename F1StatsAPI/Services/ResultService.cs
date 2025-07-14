@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.Runtime.InteropServices;
 using F1StatsAPI.DTOs;
 using AutoMapper;
+using F1StatsAPI.Services.Interfaces;
 
 namespace F1StatsAPI.Services
 {

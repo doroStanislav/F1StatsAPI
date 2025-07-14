@@ -2,6 +2,7 @@ using F1StatsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using F1StatsAPI.Services;
+using F1StatsAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<IGrandPrixService, GrandPrixService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IResultService, ResultService>();
+builder.Services.AddScoped<IDriverStatsService, DriverStatsService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -2,10 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using F1StatsAPI.Data;
 using F1StatsAPI.Models;
-using F1StatsAPI.Services;
 using System.Threading.Tasks;
 using System.Reflection.Metadata.Ecma335;
 using F1StatsAPI.DTOs;
+using F1StatsAPI.Services.Interfaces;
 
 namespace F1StatsAPI.Controllers
 {

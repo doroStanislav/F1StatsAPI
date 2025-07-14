@@ -1,7 +1,7 @@
 ﻿using F1StatsAPI.Models;
 using F1StatsAPI.DTOs;
 
-namespace F1StatsAPI.Services
+namespace F1StatsAPI.Services.Interfaces
 {
     public interface IResultService
     {
