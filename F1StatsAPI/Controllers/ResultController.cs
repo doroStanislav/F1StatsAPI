@@ -1,12 +1,12 @@
 ﻿using F1StatsAPI.Data;
 using F1StatsAPI.Migrations;
 using F1StatsAPI.Models;
-using F1StatsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Data.Common;
 using F1StatsAPI.DTOs;
+using F1StatsAPI.Services.Interfaces;
 
 namespace F1StatsAPI.Controllers
 {

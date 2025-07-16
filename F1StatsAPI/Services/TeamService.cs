@@ -1,10 +1,10 @@
 ﻿using F1StatsAPI.Models;
 using F1StatsAPI.Data;
-using F1StatsAPI.Services;
 using F1StatsAPI.DTOs;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Microsoft.Identity.Client;
+using F1StatsAPI.Services.Interfaces;
 
 namespace F1StatsAPI.Services
 {

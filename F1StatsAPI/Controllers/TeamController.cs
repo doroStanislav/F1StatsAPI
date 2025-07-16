@@ -2,8 +2,8 @@
 using F1StatsAPI.Data;
 using F1StatsAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using F1StatsAPI.Services;
 using F1StatsAPI.DTOs;
+using F1StatsAPI.Services.Interfaces;
 
 namespace F1StatsAPI.Controllers
 {

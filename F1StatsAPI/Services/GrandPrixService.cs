@@ -4,6 +4,7 @@ using F1StatsAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using F1StatsAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using F1StatsAPI.Services.Interfaces;
 
 namespace F1StatsAPI.Services
 {
