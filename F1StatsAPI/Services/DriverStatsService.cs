@@ -6,24 +6,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 using F1StatsAPI.Models;
 using F1StatsAPI.Migrations;
+using F1StatsAPI.Repositories;
 
 namespace F1StatsAPI.Services
 {
     public class DriverStatsService : IDriverStatsService
     {
-        private readonly F1StatsContext _context;
+        private readonly IResultRepository _resultRepository;
 
-        public DriverStatsService(F1StatsContext context)
+        public DriverStatsService(IResultRepository resultRepository)
         {
-            _context = context;
+            _resultRepository = resultRepository;
         }
 
         public async Task<IEnumerable<DriverStandingDTO>> GetStandingDTOsAsync()
         {
-            var driverStanding = await _context.Results
-                .Include(r => r.Driver)
-                .Include(r => r.Team)
-                .Include(r => r.GrandPrix)
+            var results = await _resultRepository.GetAllAsync();
+            var driverStanding = results
                 .Where(r => r.Driver!.IsActive == true)
                 .GroupBy(r => r.DriverId)
                 .Select(group => new DriverStandingDTO
@@ -35,7 +34,7 @@ namespace F1StatsAPI.Services
                     TotalPoints = group.Sum(d => d.Points ?? 0)
                 })
                 .OrderByDescending(dto => dto.TotalPoints)
-                .ToListAsync();
+                .ToList();
 
             for (int i = 0; i < driverStanding.Count; i++)
             {
