@@ -1,11 +1,5 @@
-﻿using AutoMapper;
-using F1StatsAPI.DTOs;
-using F1StatsAPI.Data;
+﻿using F1StatsAPI.DTOs;
 using F1StatsAPI.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http.HttpResults;
-using F1StatsAPI.Models;
-using F1StatsAPI.Migrations;
 using F1StatsAPI.Repositories;
 
 namespace F1StatsAPI.Services
