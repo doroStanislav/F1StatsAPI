@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using F1StatsAPI.Services;
 using F1StatsAPI.Services.Interfaces;
+using F1StatsAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ builder.Services.AddScoped<IGrandPrixService, GrandPrixService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IResultService, ResultService>();
 builder.Services.AddScoped<IDriverStatsService, DriverStatsService>();
+builder.Services.AddScoped<ITeamStatsService, TeamStatsService>();
+builder.Services.AddScoped<IResultRepository, ResultRepository>();
 
 var app = builder.Build();
 

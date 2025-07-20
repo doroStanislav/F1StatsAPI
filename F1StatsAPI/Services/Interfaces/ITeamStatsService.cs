@@ -4,6 +4,6 @@ namespace F1StatsAPI.Services.Interfaces
 {
     public interface ITeamStatsService
     {
-        Task<IEnumerable<TeamStandingDTO>> GetTeamStandingsDTOsAsync();
+        Task<IEnumerable<TeamStandingDTO>> GetTeamStandingDTOsAsync();
     }
 }

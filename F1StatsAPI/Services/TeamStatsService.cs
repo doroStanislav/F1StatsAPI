@@ -13,7 +13,7 @@ namespace F1StatsAPI.Services
             _resultRepository = resultRepository;
         }
 
-        public async Task<IEnumerable<TeamStandingDTO>> GetTeamStandingsDTOsAsync()
+        public async Task<IEnumerable<TeamStandingDTO>> GetTeamStandingDTOsAsync()
         {
             var results = await _resultRepository.GetAllAsync();
             var teamStanding = results
